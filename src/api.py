@@ -88,6 +88,8 @@ class BaseApiEndpoint:
         return self._get(url)['data']
 
     def find(self, *args, **kwargs):
+        if 'limit' not in kwargs:
+            kwargs['limit'] = 10
         url = self._get_url(*args, **kwargs)
         return self._get(url)['data']['results']
 

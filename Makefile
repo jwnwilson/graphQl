@@ -1,3 +1,6 @@
+include .env
+export
+
 DOCKER_NAME=scp_graphql
 VERSION=$(shell cat VERSION)
 DOCKER_IMAGE=${DOCKER_NAME}:${VERSION}
@@ -7,7 +10,7 @@ install:
 	pipenv install
 
 run:
-	cd scp && python server.py
+	cd src && python server.py
 
 docker_build:
 	docker build \
