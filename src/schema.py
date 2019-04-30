@@ -24,6 +24,19 @@ def json2obj(data):
     return json.loads(json.dumps(data), object_hook=_json_object_hook)
 
 
+class CharacterSummary(ObjectType):
+    resourceURI = String()
+    name = String()
+    role = String()
+
+
+class CharacterList(ObjectType):
+    available = Int()
+    returned = Int()
+    collectionURI = String()
+    items = List(CharacterSummary)
+
+
 class Comic(ObjectType):
     id = String()
     digitalId = String()
@@ -32,6 +45,7 @@ class Comic(ObjectType):
     variantDescription = String()
     description = String()
     modified = String()
+    characters = Field(CharacterList)
 
     def resolve_comic(self, info):
         return json2obj(API.comic.get(self.comic_id))
