@@ -30,6 +30,21 @@ class MarvelSummary(ObjectType):
     role = String()
 
 
+class MarvelDataContainer(ObjectType):
+    offset = Int()
+    limit = Int()
+    total = Int()
+    count = Int()
+
+
+class CharacterDataContainer(MarvelDataContainer):
+    results = List(lambda: Character)
+
+
+class ComicSummary(MarvelSummary):
+    pass
+
+
 class CharacterSummary(MarvelSummary):
     pass
 
@@ -48,18 +63,8 @@ class MarvelList(ObjectType):
     collectionURI = String()
 
 
-class CharacterList(MarvelList):
-    items = List(CharacterSummary)
-
-    def resolve_items(self, info):
-        import pdb;pdb.set_trace()
-        if self.items:
-            character_ids = [
-                c.collectionURI.split('/')[-1] for c in self.items
-            ]
-
-            characters = API.character.get_batch(character_ids)
-        return json2obj(characters)
+class ComicList(ObjectType):
+    items = List(ComicSummary)
 
 
 class StoryList(ObjectType):
@@ -68,6 +73,35 @@ class StoryList(ObjectType):
 
 class EventList(ObjectType):
     items = List(EventSummary)
+
+
+class Character(ObjectType):
+    id = String()
+    name = String()
+    description = String()
+    modified = String()
+    resourceURI = String()
+    urls = List(String)
+    thumbnail = String()
+    comics = Field(ComicList)
+    stories = Field(StoryList)
+    events = Field(EventList)
+    # series = Field(SeriesList)
+
+
+class CharacterList(MarvelList):
+    items = List(CharacterSummary)
+    details = List(CharacterDataContainer)
+
+    def resolve_details(self, info):
+        characters = []
+        if self.items:
+            character_ids = [
+                c.resourceURI.split('/')[-1] for c in self.items
+            ]
+
+            characters = API.character.get_batch(character_ids)
+        return json2obj(characters)
 
 
 class Comic(ObjectType):
