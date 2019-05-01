@@ -16,10 +16,22 @@ http://localhost:5000/graphql
 ### Sample Query
 ```json
 {  
-  comics(comicId:"123456") {    
-    character {      
-          id        
-    }  
+  comics {       
+      id,
+    	title,
+    	characters {
+    	  available
+    	  returned
+    	  collectionURI,
+        items {
+          resourceURI
+        },
+        details {
+          results {
+            name
+          }
+        }
+    	}
   }
 }
 ```
