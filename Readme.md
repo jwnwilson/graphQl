@@ -6,6 +6,12 @@
 # Install Dependencies
 make install
 
+# Create .env file and add api keys to it
+https://developer.marvel.com/account
+
+PUBLIC_KEY=abcd
+PRIVATE_KEY=efgh
+
 # Run the server
 make run
 ```
